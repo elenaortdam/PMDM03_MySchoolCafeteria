@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "339815733006",
+    "project_id": "myschoolcafeteria-eos",
+    "storage_bucket": "myschoolcafeteria-eos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339815733006:android:64f247569020f58dcd695f",
+        "android_client_info": {
+          "package_name": "com.iesribera.MySchoolCafeteria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339815733006-k09q6dp2gg61k6epfvruc4usdm5tn3oc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iesribera.MySchoolCafeteria",
+            "certificate_hash": "f1d7f44f126648ab35ceba223f12149621be05cc"
+          }
+        },
+        {
+          "client_id": "339815733006-bhlg5brn53m89v7o06q7u5ucd9dinloi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUdW_sJLHuCR4lwuJNfvJ-1-8EKIBWSgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339815733006-bhlg5brn53m89v7o06q7u5ucd9dinloi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
