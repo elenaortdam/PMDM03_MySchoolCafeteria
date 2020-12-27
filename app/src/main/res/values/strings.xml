@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MySchoolCafeteria</string>
+    <string name="main_header">An easy way of make your order online</string>
+    <string name="imagen_cafeteria">Imagen de la cafeteria</string>
+    <string name="logo_uoc">Logotipo de la Universitat Oberta de Catalunya</string>
 </resources>
