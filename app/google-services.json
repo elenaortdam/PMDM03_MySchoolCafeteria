@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "339815733006",
+    "firebase_url": "https://myschoolcafeteria-eos-default-rtdb.firebaseio.com",
     "project_id": "myschoolcafeteria-eos",
     "storage_bucket": "myschoolcafeteria-eos.appspot.com"
   },
@@ -9,12 +10,12 @@
       "client_info": {
         "mobilesdk_app_id": "1:339815733006:android:64f247569020f58dcd695f",
         "android_client_info": {
-          "package_name": "com.iesribera.MySchoolCafeteria"
+          "package_name": "com.iesribera.myschoolcafeteria"
         }
       },
       "oauth_client": [
         {
-          "client_id": "339815733006-k09q6dp2gg61k6epfvruc4usdm5tn3oc.apps.googleusercontent.com",
+          "client_id": "339815733006-giv7v2e0d3m6ptvi2nbig76f2uj535hc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.iesribera.MySchoolCafeteria",

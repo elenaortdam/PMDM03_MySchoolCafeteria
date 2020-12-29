@@ -3,4 +3,12 @@
     <string name="main_header">An easy way of make your order online</string>
     <string name="imagen_cafeteria">Imagen de la cafeteria</string>
     <string name="logo_uoc">Logotipo de la Universitat Oberta de Catalunya</string>
+    <string name="title_activity_main_panel">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="location_text">Rambla de Poblenou 156</string>
+    <string name="email">cafeteria@uoc.edu</string>
+    <string name="location_description">icono de la localizacion</string>
+    <string name="email_description">icono email</string>
 </resources>

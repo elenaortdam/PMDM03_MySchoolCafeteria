@@ -1,46 +1,63 @@
 package com.iesribera.myschoolcafeteria;
 
-public class User  {
+public class User {
 
-    private String name;
-    private String email;
+	private static final boolean allowNewInstance = true;
 
-    public String getName() {
-        return name;
-    }
+	private String name;
+	private String email;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+/*	private static User instance = null;
 
-    public String getEmail() {
-        return email;
-    }
+	public User(String name, String email) throws Exception {
+		if (!allowNewInstance)
+			throw new Exception("No se puede crear la instancia, usa getInstance");
+		else {
+			this.name = name;
+			this.email = email;
+			instance = new User(name, email);
+			allowNewInstance = false;
+		}
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+ */
 
-    public String getUid() {
-        return uid;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    private String uid;
+	public String getEmail() {
+		return email;
+	}
 
-    private static User mInstance;
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    //nobody can instantiate
-    private User() {
+	public String getUid() {
+		return uid;
+	}
 
-    }
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
-    public static User getInstance() {
-        if (mInstance == null)
-            mInstance = new User();
-        return mInstance;
-    }
+	private String uid;
+
+	private static User mInstance;
+
+	//nobody can instantiate
+	private User() {
+
+	}
+
+	public static User getInstance() {
+		if (mInstance == null)
+			mInstance = new User();
+		return mInstance;
+	}
 }
