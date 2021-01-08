@@ -4,8 +4,8 @@
     <string name="imagen_cafeteria">Imagen de la cafeteria</string>
     <string name="logo_uoc">Logotipo de la Universitat Oberta de Catalunya</string>
     <string name="title_activity_main_panel">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_home">My order</string>
+    <string name="title_dashboard">Pick up map</string>
     <string name="title_notifications">Notifications</string>
     <string name="location_text">Rambla de Poblenou 156</string>
     <string name="email">cafeteria@uoc.edu</string>

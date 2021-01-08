@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 	//Variable para gestionar FirebaseAuth
 	private FirebaseAuth mAuth;
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		FirebaseAuth.getInstance().signOut();
+//		mGoogleSignInClient.signOut();
+
 		AnimatorSet animatorSet = new AnimatorSet();
 
 		View cafeteriaLogo = findViewById(R.id.item_photo);
@@ -53,6 +56,41 @@ public class MainActivity extends AppCompatActivity {
 		animatorSet.play(translate).with(rotate);
 		//start animation
 		animatorSet.start();
+		SignInButton btnSignIn = findViewById(R.id.signInButton);
+		btnSignIn.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//						.requestIdToken(getString(R.string.default_web_client_id))
+.requestEmail()
+.build();
+
+				mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSign);
+				mAuth = FirebaseAuth.getInstance();
+				signIn();
+				if (mAuth != null) {
+					showMainWindow();
+				}
+//				mGoogleSignInClient.signOut();
+//								   .addOnCompleteListener(new OnCompleteListener<Void>() {
+//					@Override
+//					public void onComplete(@NonNull Task<Void> task) {
+//						//Abrir MainActivity con SigIn button
+//						if(task.isSuccessful()){
+//							Toast.makeText(getApplicationContext(), "Cerrando pepión",
+//										   Toast.LENGTH_LONG).show();
+////							Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+////							startActivity(mainActivity);
+//						}else{
+//							Toast.makeText(getApplicationContext(), "No se pudo cerrar sesión con google",
+//										   Toast.LENGTH_LONG).show();
+//						}
+//					}
+//				});
+			}
+		});
+
+//		SignInButton btnSignIn = findViewById(R.id.signInButton);
+//		btnSignIn.setOnClickListener(v -> signIn());
 
 		rotate.addListener(new Animator.AnimatorListener() {
 			@Override
@@ -66,11 +104,9 @@ public class MainActivity extends AppCompatActivity {
 				} catch (Exception ignored) {
 				}
 
-				if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-					Intent i = new Intent(getApplicationContext(),
-										  MainPanelActivity.class);
-					startActivity(i);
-				}
+//				if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//					showMainWindow();
+//				}
 			}
 
 			@Override
@@ -81,31 +117,30 @@ public class MainActivity extends AppCompatActivity {
 			public void onAnimationRepeat(Animator animator) {
 			}
 		});
+	}
 
+	private void showMainWindow() {
+		Intent i = new Intent(getApplicationContext(),
+							  MainPanelActivity.class);
+		Toast.makeText(getApplicationContext(),
+					   "Entrando en su cuenta", Toast.LENGTH_LONG).show();
+		startActivity(i);
+	}
+
+	@Override
+	public void onClick(View v) {
 		GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestIdToken(getString(R.string.default_web_client_id))
 				.requestEmail()
 				.build();
 
 		mGoogleSignInClient = GoogleSignIn.getClient(this, googleSign);
-		SignInButton btnSignIn = findViewById(R.id.signInButton);
-		btnSignIn.setOnClickListener(v -> signIn());
 		mAuth = FirebaseAuth.getInstance();
+		signIn();
+		if (mAuth != null) {
+			showMainWindow();
+		}
 	}
-
-	/*
-	@Override
-	public void onClick(View v) {
-		SignInButton signInGoogle = findViewById(R.id.signInButton);
-		signInGoogle.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				signIn();
-			}
-		});
-	}
-
-	 */
 
 	private void signIn() {
 		Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -145,31 +180,11 @@ public class MainActivity extends AppCompatActivity {
 					 Log.d(TAG, "signInWithCredential:success");
 					 System.out.println("Logueado");
 					 FirebaseUser user = mAuth.getCurrentUser();
-//					 updateUI(user);
 				 } else {
 					 // If sign in fails, display a message to the user.
 					 Log.w(TAG, "signInWithCredential:failure", task.getException());
-//					 updateUI(null);
 				 }
 			 });
-		/*
-		AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-		mAuth.signInWithCredential(credential)
-			 .addOnCompleteListener(this, task -> {
-				 if (task.isSuccessful()) {
-					 // Sign in success, update UI with the signed-in user's information
-					 Log.d(TAG, "signInWithCredential:success");
-					 //FirebaseUser user = mAuth.getCurrentUser();
-					 //Iniciar DASHBOARD u otra actividad luego del SigIn Exitoso
-
-				 } else {
-					 // If sign in fails, display a message to the user.
-					 Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-				 }
-			 });
-
-		 */
 	}
 
 }
