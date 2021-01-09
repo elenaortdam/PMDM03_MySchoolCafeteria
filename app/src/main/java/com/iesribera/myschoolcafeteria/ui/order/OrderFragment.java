@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria.ui.home;
+package com.iesribera.myschoolcafeteria.ui.order;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +24,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
+import com.iesribera.myschoolcafeteria.User;
+import com.iesribera.myschoolcafeteria.ui.adapters.ProductAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,40 +38,38 @@ import static android.content.ContentValues.TAG;
 
 public class OrderFragment extends Fragment {
 
-	private HomeViewModel homeViewModel;
-	private final List<Product> mProductList = new ArrayList<>();
 	private RecyclerView recyclerView;
-	private RecyclerView.Adapter mAdapter;
-	private RecyclerView.LayoutManager layoutManager;
+
+	private ProductAdapter productAdapter;
+	private final List<Product> products = new ArrayList<>();
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
-		homeViewModel =
-				new ViewModelProvider(this).get(HomeViewModel.class);
-		View root = inflater.inflate(R.layout.order, container, false);
-		final TextView textView = root.findViewById(R.id.item_name);
-		homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-			@Override
-			public void onChanged(@Nullable String s) {
-				textView.setText(s);
-			}
-		});
-		return root;
+		View view = inflater.inflate(R.layout.order, container, false);
+		recyclerView = view.findViewById(R.id.recyclerview);
+
+		TextView userName = view.findViewById(R.id.userName);
+		userName.setText(User.getInstance().getName());
+		loadProductList();
+		recyclerView.setHasFixedSize(true);
+		recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+		recyclerView.setAdapter(new ProductAdapter(view.getContext(), products));
+		return view;
 	}
 
 	private void loadProductList() {
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
 		mDatabase.child("products").addValueEventListener(new ValueEventListener() {
+
 			@Override
 			public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 				for (DataSnapshot productSnapshot : snapshot.getChildren()) {
 					Product product = productSnapshot.getValue(Product.class);
-					downloadPhoto(product);
-					mProductList.add(product);
+//					downloadPhoto(product);
+					products.add(product);
 				}
-
 				//TODO: Update the IU
 				//for example
 				//notifyOnDataSetChanged() inside a RecyclerView
@@ -81,7 +79,9 @@ public class OrderFragment extends Fragment {
 			@Override
 			public void onCancelled(@NonNull DatabaseError error) {
 			}
+
 		});
+
 	}
 
 	private void downloadPhoto(Product p) {
@@ -96,7 +96,7 @@ public class OrderFragment extends Fragment {
 					//Insert the downloaded image in its right position at the ArrayList
 					String url = "gs://" + taskSnapshot.getStorage().getBucket() + "/" + taskSnapshot.getStorage().getName();
 					Log.d(TAG, "Loaded " + url);
-					for (Product p : mProductList) {
+					for (Product p : products) {
 						if (p.image.equals(url)) {
 							p.photo = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 							//TODO: Update the IU: For example: notifyDataSetChanged(); on a RecyclerView
@@ -111,4 +111,5 @@ public class OrderFragment extends Fragment {
 		}
 
 	}
+
 }

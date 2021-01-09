@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		FirebaseAuth.getInstance().signOut();
-//		mGoogleSignInClient.signOut();
 
 		AnimatorSet animatorSet = new AnimatorSet();
 
@@ -60,37 +59,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		btnSignIn.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
 				GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//						.requestIdToken(getString(R.string.default_web_client_id))
-.requestEmail()
-.build();
+						.requestIdToken(getString(R.string.default_web_client_id))
+						.requestEmail()
+						.build();
 
 				mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSign);
 				mAuth = FirebaseAuth.getInstance();
+//				User user = User.getInstance();
+//				FirebaseUser currentUser = mAuth.getCurrentUser();
+//				user.setEmail(currentUser.getEmail());
+//				user.setName(currentUser.getDisplayName());
+//				user.setUid(currentUser.getUid());
 				signIn();
 				if (mAuth != null) {
 					showMainWindow();
 				}
-//				mGoogleSignInClient.signOut();
-//								   .addOnCompleteListener(new OnCompleteListener<Void>() {
-//					@Override
-//					public void onComplete(@NonNull Task<Void> task) {
-//						//Abrir MainActivity con SigIn button
-//						if(task.isSuccessful()){
-//							Toast.makeText(getApplicationContext(), "Cerrando pepión",
-//										   Toast.LENGTH_LONG).show();
-////							Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-////							startActivity(mainActivity);
-//						}else{
-//							Toast.makeText(getApplicationContext(), "No se pudo cerrar sesión con google",
-//										   Toast.LENGTH_LONG).show();
-//						}
-//					}
-//				});
 			}
 		});
 
-//		SignInButton btnSignIn = findViewById(R.id.signInButton);
-//		btnSignIn.setOnClickListener(v -> signIn());
 
 		rotate.addListener(new Animator.AnimatorListener() {
 			@Override
@@ -104,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				} catch (Exception ignored) {
 				}
 
-//				if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//					showMainWindow();
-//				}
+				if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+					showMainWindow();
+				}
 			}
 
 			@Override
@@ -143,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void signIn() {
+
 		Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 		startActivityForResult(signInIntent, RC_SIGN_IN);
 	}
