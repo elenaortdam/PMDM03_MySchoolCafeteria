@@ -9,13 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,13 +55,26 @@ public class MapsFragment extends Fragment {
 				DatabaseReference locations = FirebaseDatabase.getInstance().getReference("/cafeterias");
 				locations.addListenerForSingleValueEvent(new ValueEventListener() {
 					@Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+						LatLngBounds.Builder builder = new LatLngBounds.Builder();
+						PolylineOptions poly = new PolylineOptions();
 						for (DataSnapshot d : snapshot.getChildren()) {
 							Cafeteria cafeteria = d.getValue(Cafeteria.class);
 							LatLng l = new LatLng(cafeteria.latitude, cafeteria.longitude);
-							googleMap.addMarker(new MarkerOptions().position(l).title(cafeteria.name))
+							googleMap.addMarker(new MarkerOptions().position(l).title(cafeteria.name)
+																   .snippet("Ocupación máxima:" +
+																					cafeteria.occupation + "%"))
 									 .setIcon(BitmapDescriptorFactory.defaultMarker());
+							builder.include(l);
+							poly.add(l);
 
 						}
+						googleMap.addPolyline(poly);
+
+						LatLngBounds bounds = builder.build();
+						CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+						googleMap.animateCamera(cu);
+//						googleMap.animateCamera(CameraUpdateFactory.zoomBy(10));
+
 					}
 
 					@Override public void onCancelled(@NonNull DatabaseError error) {
