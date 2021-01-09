@@ -24,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
-import com.iesribera.myschoolcafeteria.User;
 import com.iesribera.myschoolcafeteria.ui.adapters.ProductAdapter;
 
 import java.io.File;
@@ -49,18 +48,12 @@ public class OrderFragment extends Fragment {
 		recyclerView = view.findViewById(R.id.recyclerview);
 
 		TextView userName = view.findViewById(R.id.userName);
-		userName.setText(User.getInstance().getName());
-		loadProductList();
+//		userName.setText(User.getInstance().getName());
+//		products.add(new Product("test"));
+		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("/products");
 		recyclerView.setHasFixedSize(true);
-		recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-		recyclerView.setAdapter(new ProductAdapter(view.getContext(), products));
-		return view;
-	}
-
-	private void loadProductList() {
-		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-		mDatabase.child("products").addValueEventListener(new ValueEventListener() {
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
 			@Override
 			public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -70,10 +63,9 @@ public class OrderFragment extends Fragment {
 //					downloadPhoto(product);
 					products.add(product);
 				}
-				//TODO: Update the IU
-				//for example
-				//notifyOnDataSetChanged() inside a RecyclerView
-
+				productAdapter = new ProductAdapter(getContext(), products);
+				recyclerView.setAdapter(productAdapter);
+//				productAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -82,7 +74,10 @@ public class OrderFragment extends Fragment {
 
 		});
 
+//		recyclerView.setAdapter(new ProductAdapter(getContext(), products));
+		return view;
 	}
+
 
 	private void downloadPhoto(Product p) {
 

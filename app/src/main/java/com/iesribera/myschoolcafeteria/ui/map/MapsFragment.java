@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria.ui.dashboard;
+package com.iesribera.myschoolcafeteria.ui.map;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

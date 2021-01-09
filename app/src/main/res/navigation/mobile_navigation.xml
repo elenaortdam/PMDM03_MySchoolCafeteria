@@ -13,7 +13,7 @@
 
     <fragment
             android:id="@+id/map"
-            android:name="com.iesribera.myschoolcafeteria.ui.dashboard.MapsFragment"
+            android:name="com.iesribera.myschoolcafeteria.ui.map.MapsFragment"
             android:label="@string/title_dashboard"
             tools:layout="@layout/fragment_maps" />
 
