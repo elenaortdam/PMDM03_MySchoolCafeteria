@@ -37,6 +37,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.042" />
 
+    <Button
+            android:text="@string/sign_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signOutButton"
+            android:textColor="@color/black"
+            android:visibility="invisible"
+            app:backgroundTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.717" />
+
     <com.google.android.gms.common.SignInButton
             android:id="@+id/signInButton"
             android:layout_width="wrap_content"
@@ -47,7 +61,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.717"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+
+    </com.google.android.gms.common.SignInButton>
+
 
     <ImageView
             android:id="@+id/uoc_logo"
@@ -58,7 +76,6 @@
             app:srcCompat="@drawable/logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.549"
             app:layout_constraintVertical_bias="0.907"
             android:contentDescription="@string/logo_uoc" />
 

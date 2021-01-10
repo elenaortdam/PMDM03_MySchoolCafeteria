@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,27 +57,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		//start animation
 		animatorSet.start();
 		SignInButton btnSignIn = findViewById(R.id.signInButton);
-		btnSignIn.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-						.requestIdToken(getString(R.string.default_web_client_id))
-						.requestEmail()
-						.build();
+		btnSignIn.setOnClickListener(singInClick -> {
+			GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+					.requestIdToken(getString(R.string.default_web_client_id))
+					.requestEmail()
+					.build();
 
+			if (mAuth == null || mAuth.getCurrentUser() == null) {
 				mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), googleSign);
 				mAuth = FirebaseAuth.getInstance();
-//				User user = User.getInstance();
-//				FirebaseUser currentUser = mAuth.getCurrentUser();
-//				user.setEmail(currentUser.getEmail());
-//				user.setName(currentUser.getDisplayName());
-//				user.setUid(currentUser.getUid());
 				signIn();
-				if (mAuth != null) {
-					showMainWindow();
-				}
 			}
-		});
+			if (mAuth != null && mAuth.getCurrentUser() != null) {
+				showMainWindow();
+				btnSignIn.setVisibility(View.INVISIBLE);
+				Button signOutButton = findViewById(R.id.signOutButton);
+				signOutButton.setVisibility(View.VISIBLE);
+				signOutButton.setOnClickListener(signOutClick -> {
+					mGoogleSignInClient.signOut();
+					btnSignIn.setVisibility(View.VISIBLE);
+					signOutButton.setVisibility(View.INVISIBLE);
+				});
+			}
 
+		});
 
 		rotate.addListener(new Animator.AnimatorListener() {
 			@Override
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				} catch (Exception ignored) {
 				}
 
-				if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+				if (mAuth != null && mAuth.getCurrentUser() != null) {
 					showMainWindow();
 				}
 			}
@@ -144,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				try {
 					GoogleSignInAccount account = task.getResult(ApiException.class);
 					Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-					Toast.makeText(this, "Login correcto. Accediendo...",
-								   Toast.LENGTH_LONG).show();
+//					Toast.makeText(this, "Login correcto. Accediendo...",
+//								   Toast.LENGTH_LONG).show();
 					firebaseAuthWithGoogle(account.getIdToken());
 				} catch (ApiException e) {
 					Log.w(TAG, "Google sign in failed", e);
@@ -166,7 +170,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					 // Sign in success, update UI with the signed-in user's information
 					 Log.d(TAG, "signInWithCredential:success");
 					 System.out.println("Logueado");
-					 FirebaseUser user = mAuth.getCurrentUser();
+					 FirebaseUser firebaseUser = mAuth.getCurrentUser();
+					 User user = User.getInstance();
+					 user.setUid(firebaseUser.getUid());
+					 user.setName(firebaseUser.getDisplayName());
+					 user.setEmail(firebaseUser.getEmail());
 				 } else {
 					 // If sign in fails, display a message to the user.
 					 Log.w(TAG, "signInWithCredential:failure", task.getException());

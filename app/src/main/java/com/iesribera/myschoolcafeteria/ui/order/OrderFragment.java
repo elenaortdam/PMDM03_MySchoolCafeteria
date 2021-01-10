@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
+import com.iesribera.myschoolcafeteria.User;
 import com.iesribera.myschoolcafeteria.ui.adapters.ProductAdapter;
 
 import java.io.File;
@@ -48,9 +49,9 @@ public class OrderFragment extends Fragment {
 		recyclerView = view.findViewById(R.id.recyclerview);
 
 		TextView userName = view.findViewById(R.id.userName);
-//		userName.setText(User.getInstance().getName());
-//		products.add(new Product("test"));
-		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("/products");
+		userName.setText(User.getInstance().getName());
+		DatabaseReference mDatabase = FirebaseDatabase.getInstance()
+													  .getReference("/products");
 		recyclerView.setHasFixedSize(true);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -60,12 +61,11 @@ public class OrderFragment extends Fragment {
 
 				for (DataSnapshot productSnapshot : snapshot.getChildren()) {
 					Product product = productSnapshot.getValue(Product.class);
-//					downloadPhoto(product);
+					//	downloadPhoto(product);
 					products.add(product);
 				}
 				productAdapter = new ProductAdapter(getContext(), products);
 				recyclerView.setAdapter(productAdapter);
-//				productAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -74,7 +74,6 @@ public class OrderFragment extends Fragment {
 
 		});
 
-//		recyclerView.setAdapter(new ProductAdapter(getContext(), products));
 		return view;
 	}
 
@@ -85,18 +84,20 @@ public class OrderFragment extends Fragment {
 		try {
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 			final File localFile = File.createTempFile("PNG_" + timeStamp, ".png");
-			mStorageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-				@Override
-				public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-					//Insert the downloaded image in its right position at the ArrayList
-					String url = "gs://" + taskSnapshot.getStorage().getBucket() + "/" + taskSnapshot.getStorage().getName();
-					Log.d(TAG, "Loaded " + url);
-					for (Product p : products) {
-						if (p.image.equals(url)) {
-							p.photo = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-							//TODO: Update the IU: For example: notifyDataSetChanged(); on a RecyclerView
-							Log.d(TAG, "Loaded pic " + p.image + ";" + url + localFile.getAbsolutePath());
-						}
+			mStorageReference.getFile(localFile)
+							 .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+								 @Override
+								 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+									 //Insert the downloaded image in its right position at the ArrayList
+									 String url = "gs://" + taskSnapshot.getStorage().getBucket() + "/" + taskSnapshot.getStorage().getName();
+									 Log.d(TAG, "Loaded " + url);
+									 for (Product p : products) {
+										 if (p.image.equals(url)) {
+											 p.photo = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+											 //TODO: Update the IU: For example: notifyDataSetChanged(); on a RecyclerView
+											 Log.d(TAG, "Loaded pic " + p.image + ";" + url + localFile.getAbsolutePath());
+
+										 }
 					}
 				}
 
