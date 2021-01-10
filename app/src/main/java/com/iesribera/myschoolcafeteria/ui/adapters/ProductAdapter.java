@@ -1,6 +1,7 @@
 package com.iesribera.myschoolcafeteria.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
 
-		TextView itemName, itemDescription;
+		TextView itemName, itemDescription, itemPrice;
 		ImageView itemPhoto;
 
 		public ViewHolder(@NonNull View itemView) {
@@ -49,6 +50,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 			itemName = itemView.findViewById(R.id.item_name);
 			itemDescription = itemView.findViewById(R.id.item_description);
 			itemPhoto = itemView.findViewById(R.id.item_photo);
+			itemPrice = itemView.findViewById(R.id.item_price);
 		}
 	}
 
@@ -63,10 +65,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	@Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 		String name = mProductList.get(position).getName();
 		String description = mProductList.get(position).getDescription();
-		//TODO: elena poner imagen
-//		int image = products.get(position).getImage();
+		Double price = mProductList.get(position).getPrice();
+		Bitmap image = mProductList.get(position).getPhoto();
 		holder.itemName.setText(name);
 		holder.itemDescription.setText(description);
+		holder.itemPrice.setText(String.valueOf(price));
+		holder.itemPhoto.setImageBitmap(image);
 	}
 
 	@Override public int getItemCount() {

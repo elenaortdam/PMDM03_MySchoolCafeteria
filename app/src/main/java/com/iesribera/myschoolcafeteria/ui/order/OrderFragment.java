@@ -54,18 +54,20 @@ public class OrderFragment extends Fragment {
 													  .getReference("/products");
 		recyclerView.setHasFixedSize(true);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+		mDatabase.addValueEventListener(new ValueEventListener() {
 
 			@Override
 			public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 				for (DataSnapshot productSnapshot : snapshot.getChildren()) {
 					Product product = productSnapshot.getValue(Product.class);
-					//	downloadPhoto(product);
+					downloadPhoto(product);
 					products.add(product);
 				}
 				productAdapter = new ProductAdapter(getContext(), products);
 				recyclerView.setAdapter(productAdapter);
+				productAdapter.notifyDataSetChanged();
+
 			}
 
 			@Override
@@ -76,7 +78,6 @@ public class OrderFragment extends Fragment {
 
 		return view;
 	}
-
 
 	private void downloadPhoto(Product p) {
 
@@ -94,14 +95,14 @@ public class OrderFragment extends Fragment {
 									 for (Product p : products) {
 										 if (p.image.equals(url)) {
 											 p.photo = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-											 //TODO: Update the IU: For example: notifyDataSetChanged(); on a RecyclerView
+											 productAdapter.notifyDataSetChanged();
 											 Log.d(TAG, "Loaded pic " + p.image + ";" + url + localFile.getAbsolutePath());
 
 										 }
-					}
-				}
+									 }
+								 }
 
-			});
+							 });
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
