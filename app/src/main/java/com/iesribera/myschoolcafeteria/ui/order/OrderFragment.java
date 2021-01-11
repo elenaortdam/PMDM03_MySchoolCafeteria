@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,24 +38,36 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class OrderFragment extends Fragment {
+public class OrderFragment extends Fragment implements View.OnClickListener {
 
 	private RecyclerView recyclerView;
 
 	private ProductAdapter productAdapter;
+	ImageButton addButton;
+	ImageButton removeButton;
 	private final List<Product> products = new ArrayList<>();
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.order, container, false);
 		recyclerView = view.findViewById(R.id.recyclerview);
+		View productView = inflater.inflate(R.layout.product_list, container, false);
+		addButton = productView.findViewById(R.id.item_add);
+		addButton.setOnClickListener(new View.OnClickListener() {
+			@Override public void onClick(View v) {
+				v.getTag();
+			}
+		});
 
 		TextView userName = view.findViewById(R.id.userName);
 		userName.setText(User.getInstance().getName());
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance()
 													  .getReference("/products");
-		recyclerView.setHasFixedSize(true);
+//		recyclerView.setHasFixedSize(true);
+		recyclerView.setNestedScrollingEnabled(false);
+
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 		mDatabase.addValueEventListener(new ValueEventListener() {
 
 			@Override
@@ -66,6 +80,7 @@ public class OrderFragment extends Fragment {
 				}
 				productAdapter = new ProductAdapter(getContext(), products);
 				recyclerView.setAdapter(productAdapter);
+
 				productAdapter.notifyDataSetChanged();
 
 			}
@@ -77,6 +92,13 @@ public class OrderFragment extends Fragment {
 		});
 
 		return view;
+	}
+
+	@Override
+	public void onClick(final View view) {
+		int itemPosition = recyclerView.getChildLayoutPosition(view);
+		Product item = products.get(itemPosition);
+		Toast.makeText(getContext(), item.name, Toast.LENGTH_LONG).show();
 	}
 
 	private void downloadPhoto(Product p) {

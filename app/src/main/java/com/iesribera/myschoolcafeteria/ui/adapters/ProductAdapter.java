@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
 	LayoutInflater inflater;
 	List<Product> mProductList = new ArrayList<>();
+	private static View.OnClickListener clickListener;
 
 	private View.OnClickListener listener;
 
@@ -29,7 +31,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		this.mProductList = mProductList;
 	}
 
-	@Override public void onClick(View v) {
+	@Override
+	public void onClick(View v) {
 		if (listener != null) {
 			listener.onClick(v);
 		}
@@ -40,10 +43,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
 	}
 
-	public class ViewHolder extends RecyclerView.ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 
 		TextView itemName, itemDescription, itemPrice;
 		ImageView itemPhoto;
+		ImageButton addButton, removeButton;
 
 		public ViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -51,6 +55,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 			itemDescription = itemView.findViewById(R.id.item_description);
 			itemPhoto = itemView.findViewById(R.id.item_photo);
 			itemPrice = itemView.findViewById(R.id.item_price);
+			addButton = itemView.findViewById(R.id.item_add);
 		}
 	}
 
@@ -58,7 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = inflater.inflate(R.layout.product_list, parent, false);
-		view.setOnClickListener(this);
+		view.setOnClickListener(listener);
 		return new ViewHolder(view);
 	}
 

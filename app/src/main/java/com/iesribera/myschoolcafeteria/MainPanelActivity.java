@@ -23,7 +23,7 @@ public class MainPanelActivity extends AppCompatActivity {
 												R.id.notification)
 						.build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
 	}
 
