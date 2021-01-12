@@ -14,4 +14,5 @@
     <string name="sign_out">Sign Out</string>
     <string name="default_price">1€</string>
     <string name="username">Nombre del usuario...</string>
+    <string name="floating_button_desc">Boton flotante de pedir</string>
 </resources>
