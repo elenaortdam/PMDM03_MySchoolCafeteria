@@ -75,7 +75,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 
 				for (DataSnapshot productSnapshot : snapshot.getChildren()) {
 					Product product = productSnapshot.getValue(Product.class);
-					downloadPhoto(product);
+					if (product != null) {
+						downloadPhoto(product);
+					}
 					products.add(product);
 				}
 				productAdapter = new ProductAdapter(getContext(), products);
@@ -90,8 +92,15 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 			}
 
 		});
+		TextView quantity = view.findViewById(R.id.item_quantity);
+//		productAdapter.setOnItemClickListener(this::changeItem);
 
 		return view;
+	}
+
+	public void changeItem(int position) {
+		products.get(position).setQuantity(position);
+		productAdapter.notifyItemChanged(position);
 	}
 
 	@Override

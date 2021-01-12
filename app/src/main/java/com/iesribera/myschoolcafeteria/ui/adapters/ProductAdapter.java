@@ -18,44 +18,45 @@ import com.iesribera.myschoolcafeteria.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> implements View.OnClickListener {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
-	LayoutInflater inflater;
-	List<Product> mProductList = new ArrayList<>();
-	private static View.OnClickListener clickListener;
+	private final LayoutInflater inflater;
+	private List<Product> mProductList = new ArrayList<>();
+	private OnItemClickListener mListener;
 
-	private View.OnClickListener listener;
+	public interface OnItemClickListener {
+		void onItemClick(int position);
+	}
+
+	public void setOnItemClickListener(OnItemClickListener listener) {
+		mListener = listener;
+	}
 
 	public ProductAdapter(Context context, List<Product> mProductList) {
 		this.inflater = LayoutInflater.from(context);
 		this.mProductList = mProductList;
 	}
 
-	@Override
-	public void onClick(View v) {
-		if (listener != null) {
-			listener.onClick(v);
-		}
-	}
-
-	public void setOnClickListener(View.OnClickListener listener) {
-		this.listener = listener;
+	public void setOnClickListener(OnItemClickListener listener) {
+		mListener = listener;
 
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 
-		TextView itemName, itemDescription, itemPrice;
+		TextView itemName, itemDescription, itemPrice, quantity;
 		ImageView itemPhoto;
 		ImageButton addButton, removeButton;
 
-		public ViewHolder(@NonNull View itemView) {
+		public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
 			super(itemView);
 			itemName = itemView.findViewById(R.id.item_name);
 			itemDescription = itemView.findViewById(R.id.item_description);
 			itemPhoto = itemView.findViewById(R.id.item_photo);
 			itemPrice = itemView.findViewById(R.id.item_price);
+			quantity = itemView.findViewById(R.id.item_quantity);
 			addButton = itemView.findViewById(R.id.item_add);
+			removeButton = itemView.findViewById(R.id.item_remove);
 		}
 	}
 
@@ -63,11 +64,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = inflater.inflate(R.layout.product_list, parent, false);
-		view.setOnClickListener(listener);
-		return new ViewHolder(view);
+		return new ViewHolder(view, mListener);
 	}
 
-	@Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+	@Override
+	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 		String name = mProductList.get(position).getName();
 		String description = mProductList.get(position).getDescription();
 		Double price = mProductList.get(position).getPrice();
@@ -76,6 +77,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		holder.itemDescription.setText(description);
 		holder.itemPrice.setText(String.valueOf(price));
 		holder.itemPhoto.setImageBitmap(image);
+		holder.addButton.setOnClickListener(v -> editQuantity(holder, position, true));
+		holder.removeButton.setOnClickListener(v -> editQuantity(holder, position, false));
+	}
+
+	private void editQuantity(@NonNull ViewHolder holder, int position, boolean increaseQuantity) {
+		int quantityUpdated = mProductList.get(position).getQuantity();
+		if (increaseQuantity) {
+			quantityUpdated += 1;
+		} else {
+			quantityUpdated -= 1;
+		}
+		mProductList.get(position).setQuantity(quantityUpdated);
+		holder.quantity.setText(String.valueOf(quantityUpdated));
 	}
 
 	@Override public int getItemCount() {
