@@ -50,7 +50,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.order, container, false);
-		recyclerView = view.findViewById(R.id.recyclerview);
+		recyclerView = view.findViewById(R.id.productRecyclerView);
 		View productView = inflater.inflate(R.layout.product_list, container, false);
 		addButton = productView.findViewById(R.id.item_add);
 		addButton.setOnClickListener(new View.OnClickListener() {
