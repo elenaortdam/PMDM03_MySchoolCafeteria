@@ -81,6 +81,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		holder.removeButton.setOnClickListener(v -> editQuantity(holder, position, false));
 	}
 
+	//TODO: elena controlar que no se puedan poner cantidades negativas
 	private void editQuantity(@NonNull ViewHolder holder, int position, boolean increaseQuantity) {
 		int quantityUpdated = mProductList.get(position).getQuantity();
 		if (increaseQuantity) {

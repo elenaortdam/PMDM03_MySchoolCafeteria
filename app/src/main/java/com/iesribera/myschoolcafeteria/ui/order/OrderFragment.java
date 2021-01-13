@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.iesribera.myschoolcafeteria.Order;
 import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
 import com.iesribera.myschoolcafeteria.User;
@@ -35,37 +37,40 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static android.content.ContentValues.TAG;
 
 public class OrderFragment extends Fragment implements View.OnClickListener {
 
 	private RecyclerView recyclerView;
-
 	private ProductAdapter productAdapter;
-	ImageButton addButton;
-	ImageButton removeButton;
+	private FloatingActionButton orderButton;
+	private ImageButton addButton;
 	private final List<Product> products = new ArrayList<>();
+	private final User user = User.getInstance();
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.order, container, false);
+
+		if (user == null) {
+			Toast.makeText(getContext(), "Esta zona está restringida para usuarios",
+						   Toast.LENGTH_LONG).show();
+			return view;
+		}
 		recyclerView = view.findViewById(R.id.productRecyclerView);
 		View productView = inflater.inflate(R.layout.product_list, container, false);
-		addButton = productView.findViewById(R.id.item_add);
-		addButton.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				v.getTag();
-			}
-		});
-
+//		addButton = productView.findViewById(R.id.item_add);
 		TextView userName = view.findViewById(R.id.userName);
+		orderButton = view.findViewById(R.id.orderButton);
+		orderButton.setOnClickListener(v -> {
+			createOrder();
+		});
 		userName.setText(User.getInstance().getName());
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance()
 													  .getReference("/products");
-//		recyclerView.setHasFixedSize(true);
 		recyclerView.setNestedScrollingEnabled(false);
-
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		mDatabase.addValueEventListener(new ValueEventListener() {
@@ -96,6 +101,38 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 //		productAdapter.setOnItemClickListener(this::changeItem);
 
 		return view;
+	}
+
+	public Order createOrder() {
+		List<Product> productsToOrder = products.stream()
+												.filter(product -> product.getQuantity() > 0)
+												.collect(Collectors.toList());
+		Order order = new Order();
+		if (productsToOrder.isEmpty()) {
+			Toast.makeText(getContext(), "No se puede crear un pedido sin artículos", Toast.LENGTH_LONG).show();
+			return order;
+		}
+		order.setDetails(productsToOrder.stream()
+										.map(Product::toMap)
+										.collect(Collectors.toList()));
+		double orderTotal = productsToOrder.stream()
+										   .mapToDouble(Product::getPrice)
+										   .sum();
+
+		order.setOrderTotal((float) orderTotal);
+
+		order.setUserName(user.getName());
+		order.setUserId(user.getUid());
+		order.setUserEmail(user.getEmail());
+		if (order.getOrderTotal() < 0) {
+			order.setOrderTotal(0f);
+		}
+		DatabaseReference orderReference =
+				FirebaseDatabase.getInstance().getReference("/orders");
+//		DatabaseReference newOrderReference = orderReference.push();
+		orderReference.push().setValue(order);
+
+		return order;
 	}
 
 	public void changeItem(int position) {

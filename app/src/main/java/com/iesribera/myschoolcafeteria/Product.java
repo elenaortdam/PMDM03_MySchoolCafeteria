@@ -2,20 +2,22 @@ package com.iesribera.myschoolcafeteria;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class Product {
-    public String name;
-    public String description;
-    public String image;
-    public Bitmap photo;
-    public double price;
-    public int quantity;
+public class Product implements Serializable {
+	public String name;
+	public String description;
+	public String image;
+	public Bitmap photo;
+	public double price;
+	public int quantity;
 
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("name", name);
+	public Map<String, Object> toMap() {
+		HashMap<String, Object> result = new HashMap<>();
+		result.put("name", name);
 		result.put("description", description);
 		result.put("price", price);
 		result.put("image", image);
@@ -94,5 +96,17 @@ public class Product {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	@Override public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return name.equals(product.name) &&
+				description.equals(product.description);
+	}
+
+	@Override public int hashCode() {
+		return Objects.hash(name, description);
 	}
 }
