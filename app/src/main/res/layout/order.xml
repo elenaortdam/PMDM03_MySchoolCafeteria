@@ -1,73 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_margin="10dp"
         tools:context=".ui.order.OrderFragment">
 
-    <!--            app:layout_constraintTop_toTopOf="parent"-->
-    <!--            android:layout_marginTop="10sp"-->
-    <!--            android:layout_marginStart="10sp"-->
-
-
-    <TextView
-            android:text="@string/username"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/productRecyclerView"
-            android:id="@+id/userName"
-            app:layout_constraintHorizontal_bias="0.061"
-            android:layout_marginBottom="108dp" />
-
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteY="102dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:id="@+id/nestedScrollView">
+            android:layout_height="match_parent">
+
+
+        <TextView
+                android:text="@string/username"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/productRecyclerView"
+                android:id="@+id/userName"
+                app:layout_constraintHorizontal_bias="0.066"
+                android:layout_marginBottom="12dp" />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="44dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:paddingBottom="60dp"
-                android:paddingTop="60dp"
-                android:clipToPadding="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="55dp"
+                android:clipToPadding="true"
                 android:nestedScrollingEnabled="true">
 
-            <!--                app:layout_constraintTop_toBottomOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
 
         </androidx.recyclerview.widget.RecyclerView>
-    </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@drawable/email_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:id="@+id/floatingActionButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.909"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.822" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:src="@drawable/email_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:id="@+id/floatingActionButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.909"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.822" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
 
 
