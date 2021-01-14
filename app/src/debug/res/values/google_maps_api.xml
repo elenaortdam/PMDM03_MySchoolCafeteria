@@ -1,7 +1,5 @@
 <resources>
     <!--
-    TODO: Before you run your application, you need a Google Maps API key.
-
     To get one, follow this link, follow the directions and press "Create" at the end:
 
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=F1:D7:F4:4F:12:66:48:AB:35:CE:BA:22:3F:12:14:96:21:BE:05:CC%3Bcom.iesribera.myschoolcafeteria.ui.dashboard

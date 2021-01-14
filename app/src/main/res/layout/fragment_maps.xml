@@ -15,6 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/map"
-            tools:context=".uiBottonNavigation.map.MapsFragment"
+            tools:context=".uiBottonNavigation.fragments.MapsFragment"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
 </LinearLayout>

@@ -124,8 +124,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		}
 		DatabaseReference orderReference =
 				FirebaseDatabase.getInstance().getReference("/user-orders");
-//		orderReference.push().setValue(order);
-//		createOrderCreatedNotification(order);
 
 		orderReference.runTransaction(new Transaction.Handler() {
 			@NonNull

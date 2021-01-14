@@ -17,7 +17,7 @@
 
     <fragment
             android:id="@+id/map"
-            android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.map.MapsFragment"
+            android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments.MapsFragment"
             android:label="@string/title_dashboard"
             tools:layout="@layout/fragment_maps" />
 
