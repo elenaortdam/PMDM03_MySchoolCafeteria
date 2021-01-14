@@ -65,10 +65,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		recyclerView = view.findViewById(R.id.productRecyclerView);
 		TextView userName = view.findViewById(R.id.userName);
 		orderButton = view.findViewById(R.id.orderButton);
-		orderButton.setOnClickListener(v -> {
-			createOrder(v);
-
-		});
+		orderButton.setOnClickListener(this::createOrder);
 		userName.setText(User.getInstance().getName());
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance()
 													  .getReference("/products");
@@ -169,33 +166,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private void showMapActivity(View view) {
-//		NavDirections action =
-//				SpecifyAmountFragmentDirections
-//						.actionSpecifyAmountFragmentToConfirmationFragment();
 		Navigation.findNavController(view).navigate(R.id.action_order_to_map);
-
-		/*
-		Intent i = new Intent(getContext(), MapActivity.class);
-		Toast.makeText(getActivity(),
-					   "Escoge la cafetería de recogida", Toast.LENGTH_LONG).show();
-		startActivity(i);
-
-		 */
-/*
-		Fragment fragment = new MapsFragment();
-
-		FragmentManager fm = getFragmentManager();
-		FragmentTransaction transaction = fm.beginTransaction();
-		transaction.replace(R.id.map, fragment);
-		transaction.commit();
-
- */
-
-//		FragmentManager fragmentManager=getActivity().getFragmentManager();
-//		FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-//		fragmentTransaction.replace(R.id.,fragment2,"tag");
-//		fragmentTransaction.addToBackStack(null);
-//		fragmentTransaction.commit();
 	}
 
 	@Override

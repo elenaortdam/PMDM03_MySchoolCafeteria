@@ -26,14 +26,12 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.iesribera.myschoolcafeteria.R;
 import com.iesribera.myschoolcafeteria.models.User;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
-	//Variable para gestionar FirebaseAuth
 	private FirebaseAuth mAuth;
-	//Agregar cliente de inicio de sesión de Google
 	private GoogleSignInClient mGoogleSignInClient;
-	int RC_SIGN_IN = 1;
-	String TAG = "GoogleSignIn";
+	private final int RC_SIGN_IN = 1;
+	private final String TAG = "GoogleSignIn";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				signIn();
 			}
 			if (mAuth != null && mAuth.getCurrentUser() != null) {
-				showMainWindow();
-				btnSignIn.setVisibility(View.INVISIBLE);
-				Button signOutButton = findViewById(R.id.signOutButton);
-				signOutButton.setVisibility(View.VISIBLE);
-				signOutButton.setOnClickListener(signOutClick -> {
-					mGoogleSignInClient.signOut();
-					btnSignIn.setVisibility(View.VISIBLE);
-					signOutButton.setVisibility(View.INVISIBLE);
-				});
+				login(btnSignIn);
 			}
 
 		});
@@ -95,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					Thread.sleep(1000);
 				} catch (Exception ignored) {
 				}
-
 				if (mAuth != null && mAuth.getCurrentUser() != null) {
 					showMainWindow();
 				}
@@ -111,27 +100,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		});
 	}
 
+	private void login(SignInButton btnSignIn) {
+		showMainWindow();
+		btnSignIn.setVisibility(View.INVISIBLE);
+		Button signOutButton = findViewById(R.id.signOutButton);
+		signOutButton.setVisibility(View.VISIBLE);
+		signOutButton.setOnClickListener(signOutClick -> {
+			mGoogleSignInClient.signOut();
+			btnSignIn.setVisibility(View.VISIBLE);
+			signOutButton.setVisibility(View.INVISIBLE);
+		});
+	}
+
 	private void showMainWindow() {
 		Intent i = new Intent(getApplicationContext(),
 							  MainPanelActivity.class);
 		Toast.makeText(getApplicationContext(),
 					   "Entrando en su cuenta", Toast.LENGTH_LONG).show();
 		startActivity(i);
-	}
-
-	@Override
-	public void onClick(View v) {
-		GoogleSignInOptions googleSign = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-				.requestIdToken(getString(R.string.default_web_client_id))
-				.requestEmail()
-				.build();
-
-		mGoogleSignInClient = GoogleSignIn.getClient(this, googleSign);
-		mAuth = FirebaseAuth.getInstance();
-		signIn();
-		if (mAuth != null) {
-			showMainWindow();
-		}
 	}
 
 	private void signIn() {
@@ -150,14 +136,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				try {
 					GoogleSignInAccount account = task.getResult(ApiException.class);
 					Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-//					Toast.makeText(this, "Login correcto. Accediendo...",
-//								   Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "Login correcto. Accediendo...",
+								   Toast.LENGTH_LONG).show();
 					firebaseAuthWithGoogle(account.getIdToken());
 				} catch (ApiException e) {
 					Log.w(TAG, "Google sign in failed", e);
 				}
 			} else {
-				Log.d(TAG, "Error, login no exitoso:" + task.getException().toString());
+				Log.d(TAG, "Error, falló el login:" + task.getException().toString());
 				Toast.makeText(this, "Ocurrio un error. " + task.getException().toString(),
 							   Toast.LENGTH_LONG).show();
 			}
@@ -169,16 +155,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		mAuth.signInWithCredential(credential)
 			 .addOnCompleteListener(this, task -> {
 				 if (task.isSuccessful()) {
-					 // Sign in success, update UI with the signed-in user's information
 					 Log.d(TAG, "signInWithCredential:success");
-					 System.out.println("Logueado");
 					 FirebaseUser firebaseUser = mAuth.getCurrentUser();
 					 User user = User.getInstance();
 					 user.setUid(firebaseUser.getUid());
 					 user.setName(firebaseUser.getDisplayName());
 					 user.setEmail(firebaseUser.getEmail());
+					 showMainWindow();
 				 } else {
-					 // If sign in fails, display a message to the user.
 					 Log.w(TAG, "signInWithCredential:failure", task.getException());
 				 }
 			 });

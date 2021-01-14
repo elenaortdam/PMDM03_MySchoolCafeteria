@@ -59,16 +59,7 @@ public class MapsFragment extends Fragment {
 			DatabaseReference locations = FirebaseDatabase.getInstance().getReference("/cafeterias");
 			googleMapCreated = googleMap;
 			addDefaultLocations(googleMap, locations);
-/*
-			googleMap.setOnMapClickListener(latLng -> {
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.position(latLng);
-				markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-				googleMap.clear();
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-				googleMap.addMarker(markerOptions);
-			});
-*/
+
 			googleMap.setOnMarkerClickListener(marker -> {
 				UserEvent onClickMarkerEvent = new UserEvent();
 				User user1 = User.getInstance();
