@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria.ui.map;
+package com.iesribera.myschoolcafeteria.uiBottonNavigation.map;
 
 import android.os.Bundle;
 

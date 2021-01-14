@@ -7,19 +7,19 @@
 
     <fragment
             android:id="@+id/order"
-            android:name="com.iesribera.myschoolcafeteria.ui.order.OrderFragment"
+            android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments.OrderFragment"
             android:label="@string/title_home"
             tools:layout="@layout/order" />
 
     <fragment
             android:id="@+id/map"
-            android:name="com.iesribera.myschoolcafeteria.ui.map.MapsFragment"
+            android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.map.MapsFragment"
             android:label="@string/title_dashboard"
             tools:layout="@layout/fragment_maps" />
 
     <fragment
             android:id="@+id/notification"
-            android:name="com.iesribera.myschoolcafeteria.ui.notifications.NotificationsFragment"
+            android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments.NotificationsFragment"
             android:label="@string/title_notifications"
             tools:layout="@layout/fragment_notifications" />
 </navigation>

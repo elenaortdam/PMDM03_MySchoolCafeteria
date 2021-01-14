@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria;
+package com.iesribera.myschoolcafeteria.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.iesribera.myschoolcafeteria.R;
+import com.iesribera.myschoolcafeteria.models.User;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

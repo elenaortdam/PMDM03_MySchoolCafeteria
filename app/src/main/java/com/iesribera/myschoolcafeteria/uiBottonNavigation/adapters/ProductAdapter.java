@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria.ui.adapters;
+package com.iesribera.myschoolcafeteria.uiBottonNavigation.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
+import com.iesribera.myschoolcafeteria.models.Product;
 
 import java.util.ArrayList;
 import java.util.List;

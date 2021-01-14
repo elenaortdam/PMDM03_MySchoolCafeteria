@@ -1,17 +1,16 @@
-package com.iesribera.myschoolcafeteria.ui.order;
+package com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,18 +23,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.iesribera.myschoolcafeteria.Order;
-import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
-import com.iesribera.myschoolcafeteria.User;
-import com.iesribera.myschoolcafeteria.ui.adapters.ProductAdapter;
-import com.iesribera.myschoolcafeteria.ui.map.MapsFragment;
+import com.iesribera.myschoolcafeteria.models.Order;
+import com.iesribera.myschoolcafeteria.models.Product;
+import com.iesribera.myschoolcafeteria.models.User;
+import com.iesribera.myschoolcafeteria.models.UserEvent;
+import com.iesribera.myschoolcafeteria.uiBottonNavigation.adapters.ProductAdapter;
+import com.iesribera.myschoolcafeteria.uiBottonNavigation.map.MapsFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +50,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 	private RecyclerView recyclerView;
 	private ProductAdapter productAdapter;
 	private FloatingActionButton orderButton;
-	private ImageButton addButton;
 	private final List<Product> products = new ArrayList<>();
 	private final User user = User.getInstance();
 
@@ -66,19 +63,14 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 			return view;
 		}
 		recyclerView = view.findViewById(R.id.productRecyclerView);
-		View productView = inflater.inflate(R.layout.product_list, container, false);
-//		addButton = productView.findViewById(R.id.item_add);
 		TextView userName = view.findViewById(R.id.userName);
 		orderButton = view.findViewById(R.id.orderButton);
-		orderButton.setOnClickListener(v -> {
-			createOrder();
-		});
+		orderButton.setOnClickListener(v -> createOrder());
 		userName.setText(User.getInstance().getName());
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance()
 													  .getReference("/products");
-		recyclerView.setNestedScrollingEnabled(false);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		mDatabase.addValueEventListener(new ValueEventListener() {
 
 			@Override
@@ -93,9 +85,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 				}
 				productAdapter = new ProductAdapter(getContext(), products);
 				recyclerView.setAdapter(productAdapter);
-
 				productAdapter.notifyDataSetChanged();
-
 			}
 
 			@Override
@@ -103,20 +93,36 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 			}
 
 		});
-		TextView quantity = view.findViewById(R.id.item_quantity);
-//		productAdapter.setOnItemClickListener(this::changeItem);
+		if (view.findViewById(R.id.fragment_container) != null) {
 
+			// However, if we're being restored from a previous state,
+			// then we don't need to do anything and should return or else
+			// we could end up with overlapping fragments.
+			if (savedInstanceState != null) {
+			}
+
+			// Create an instance of Fragment1
+			MapsFragment firstFragment = new MapsFragment();
+
+			// In case this activity was started with special instructions from an Intent,
+			// pass the Intent's extras to the fragment as arguments
+			firstFragment.setArguments(getActivity().getIntent().getExtras());
+
+			// Add the fragment to the 'fragment_container' FrameLayout
+			getChildFragmentManager().beginTransaction()
+									 .add(R.id.fragment_container, firstFragment).commit();
+		}
 		return view;
 	}
 
-	public Order createOrder() {
+	@SuppressLint("DefaultLocale") public void createOrder() {
 		List<Product> productsToOrder = products.stream()
 												.filter(product -> product.getQuantity() > 0)
 												.collect(Collectors.toList());
 		Order order = new Order();
 		if (productsToOrder.isEmpty()) {
 			Toast.makeText(getContext(), "No se puede crear un pedido sin artículos", Toast.LENGTH_LONG).show();
-			return order;
+			return;
 		}
 		order.setDetails(productsToOrder.stream()
 										.map(Product::toMap)
@@ -126,7 +132,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 										   .sum();
 
 		order.setOrderTotal((float) orderTotal);
-
 		order.setUserName(user.getName());
 		order.setUserId(user.getUid());
 		order.setUserEmail(user.getEmail());
@@ -135,6 +140,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		}
 		DatabaseReference orderReference =
 				FirebaseDatabase.getInstance().getReference("/user-orders");
+		orderReference.push().setValue(order);
+		createOrderCreatedNotification(order);
+		showMapActivity();
+/*
 		orderReference.runTransaction(new Transaction.Handler() {
 			@NonNull
 			@Override
@@ -153,19 +162,27 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 			@Override
 			public void onComplete(@Nullable DatabaseError error,
 								   boolean committed, @Nullable DataSnapshot currentData) {
-
 				if (error != null || !committed) {
 					Toast.makeText(getContext(), "Ha ocurrido un error al crear el pedido",
 								   Toast.LENGTH_LONG).show();
 				} else {
+					createOrderCreatedNotification(order);
 					showMapActivity();
 				}
-
 			}
 		});
-//		orderReference.push().setValue(order);
 
-		return order;
+ */
+	}
+
+	private void createOrderCreatedNotification(Order order) {
+		User user = User.getInstance();
+		UserEvent createOrder = new UserEvent();
+		createOrder.uid = user.getUid();
+		createOrder.description =
+				String.format("Order sent! Total amount: %.2f €",
+							  order.getOrderTotal());
+		createOrder.addToDatabase();
 	}
 
 	private void showMapActivity() {
@@ -176,21 +193,19 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		startActivity(i);
 
 		 */
-		FragmentManager fragmentManager2 = getFragmentManager();
-		FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-		MapsFragment fragment2 = new MapsFragment();
-		fragmentTransaction2.commit();
+
+		Fragment fragment = new MapsFragment();
+
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction transaction = fm.beginTransaction();
+		transaction.replace(R.id.map, fragment);
+		transaction.commit();
 
 //		FragmentManager fragmentManager=getActivity().getFragmentManager();
 //		FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
 //		fragmentTransaction.replace(R.id.,fragment2,"tag");
 //		fragmentTransaction.addToBackStack(null);
 //		fragmentTransaction.commit();
-	}
-
-	public void changeItem(int position) {
-		products.get(position).setQuantity(position);
-		productAdapter.notifyItemChanged(position);
 	}
 
 	@Override
