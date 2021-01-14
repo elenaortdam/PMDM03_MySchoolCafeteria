@@ -29,18 +29,6 @@ import com.iesribera.myschoolcafeteria.R;
 
 public class MapsFragment extends Fragment {
 
-	private final OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-		@Override
-		public void onMapReady(GoogleMap googleMap) {
-			DatabaseReference reference = FirebaseDatabase.getInstance().getReference("/cafeterias");
-
-			LatLng sydney = new LatLng(-34, 151);
-			googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-			googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-		}
-	};
-
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater,

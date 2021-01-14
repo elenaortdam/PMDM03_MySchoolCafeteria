@@ -11,7 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,6 +35,7 @@ import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
 import com.iesribera.myschoolcafeteria.User;
 import com.iesribera.myschoolcafeteria.ui.adapters.ProductAdapter;
+import com.iesribera.myschoolcafeteria.ui.map.MapsFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,11 +134,58 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 			order.setOrderTotal(0f);
 		}
 		DatabaseReference orderReference =
-				FirebaseDatabase.getInstance().getReference("/orders");
-//		DatabaseReference newOrderReference = orderReference.push();
-		orderReference.push().setValue(order);
+				FirebaseDatabase.getInstance().getReference("/user-orders");
+		orderReference.runTransaction(new Transaction.Handler() {
+			@NonNull
+			@Override
+			public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+				Integer currentValue = currentData.getValue(Integer.class);
+				orderReference.push().setValue(order);
+
+				if (currentValue == null) {
+					currentData.setValue(1);
+				} else {
+					currentData.setValue(currentValue + 1);
+				}
+				return Transaction.success(currentData);
+			}
+
+			@Override
+			public void onComplete(@Nullable DatabaseError error,
+								   boolean committed, @Nullable DataSnapshot currentData) {
+
+				if (error != null || !committed) {
+					Toast.makeText(getContext(), "Ha ocurrido un error al crear el pedido",
+								   Toast.LENGTH_LONG).show();
+				} else {
+					showMapActivity();
+				}
+
+			}
+		});
+//		orderReference.push().setValue(order);
 
 		return order;
+	}
+
+	private void showMapActivity() {
+		/*
+		Intent i = new Intent(getContext(), MapActivity.class);
+		Toast.makeText(getActivity(),
+					   "Escoge la cafetería de recogida", Toast.LENGTH_LONG).show();
+		startActivity(i);
+
+		 */
+		FragmentManager fragmentManager2 = getFragmentManager();
+		FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+		MapsFragment fragment2 = new MapsFragment();
+		fragmentTransaction2.commit();
+
+//		FragmentManager fragmentManager=getActivity().getFragmentManager();
+//		FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+//		fragmentTransaction.replace(R.id.,fragment2,"tag");
+//		fragmentTransaction.addToBackStack(null);
+//		fragmentTransaction.commit();
 	}
 
 	public void changeItem(int position) {
