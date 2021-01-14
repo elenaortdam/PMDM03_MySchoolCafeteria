@@ -99,6 +99,9 @@ public class MapsFragment extends Fragment {
 								   Toast.LENGTH_LONG).show();
 					return true;
 				});
+				Toast.makeText(getContext(), "El pedido se ha completado correctamente," +
+									   "seleccione la cafetería de recogida",
+							   Toast.LENGTH_LONG).show();
 			}
 		});
 

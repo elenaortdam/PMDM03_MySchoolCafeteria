@@ -1,6 +1,5 @@
 package com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments;
 
-import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +22,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -64,8 +66,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		TextView userName = view.findViewById(R.id.userName);
 		orderButton = view.findViewById(R.id.orderButton);
 		orderButton.setOnClickListener(v -> {
-			createOrder();
-			showMapActivity(v);
+			createOrder(v);
 
 		});
 		userName.setText(User.getInstance().getName());
@@ -98,7 +99,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		return view;
 	}
 
-	@SuppressLint("DefaultLocale") public void createOrder() {
+	public void createOrder(View view) {
 		List<Product> productsToOrder = products.stream()
 												.filter(product -> product.getQuantity() > 0)
 												.collect(Collectors.toList());
@@ -123,9 +124,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 		}
 		DatabaseReference orderReference =
 				FirebaseDatabase.getInstance().getReference("/user-orders");
-		orderReference.push().setValue(order);
-		createOrderCreatedNotification(order);
-/*
+//		orderReference.push().setValue(order);
+//		createOrderCreatedNotification(order);
+
 		orderReference.runTransaction(new Transaction.Handler() {
 			@NonNull
 			@Override
@@ -148,13 +149,15 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 					Toast.makeText(getContext(), "Ha ocurrido un error al crear el pedido",
 								   Toast.LENGTH_LONG).show();
 				} else {
+					Toast.makeText(getContext(), "El pedido se ha completado correctamente," +
+										   "seleccione la cafetería de recogida",
+								   Toast.LENGTH_LONG).show();
 					createOrderCreatedNotification(order);
-					showMapActivity();
+					showMapActivity(view);
 				}
 			}
 		});
 
- */
 	}
 
 	private void createOrderCreatedNotification(Order order) {
@@ -172,6 +175,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 //				SpecifyAmountFragmentDirections
 //						.actionSpecifyAmountFragmentToConfirmationFragment();
 		Navigation.findNavController(view).navigate(R.id.action_order_to_map);
+
 		/*
 		Intent i = new Intent(getContext(), MapActivity.class);
 		Toast.makeText(getActivity(),
