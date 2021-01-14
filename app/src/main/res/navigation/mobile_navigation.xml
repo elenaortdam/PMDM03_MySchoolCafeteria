@@ -9,7 +9,11 @@
             android:id="@+id/order"
             android:name="com.iesribera.myschoolcafeteria.uiBottonNavigation.fragments.OrderFragment"
             android:label="@string/title_home"
-            tools:layout="@layout/order" />
+            tools:layout="@layout/order">
+        <action
+                android:id="@+id/action_order_to_map"
+                app:destination="@id/map" />
+    </fragment>
 
     <fragment
             android:id="@+id/map"
