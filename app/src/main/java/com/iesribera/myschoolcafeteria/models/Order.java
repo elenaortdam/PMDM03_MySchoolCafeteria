@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria;
+package com.iesribera.myschoolcafeteria.models;
 
 import java.io.Serializable;
 import java.util.HashMap;

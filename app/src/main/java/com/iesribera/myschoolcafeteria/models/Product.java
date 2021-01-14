@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria;
+package com.iesribera.myschoolcafeteria.models;
 
 import android.graphics.Bitmap;
 

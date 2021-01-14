@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria;
+package com.iesribera.myschoolcafeteria.models;
 
 public class Cafeteria {
     public String name;

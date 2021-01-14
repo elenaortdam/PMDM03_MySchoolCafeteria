@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria;
+package com.iesribera.myschoolcafeteria.models;
 
 public class User {
 
@@ -6,21 +6,6 @@ public class User {
 
 	private String name;
 	private String email;
-
-/*	private static User instance = null;
-
-	public User(String name, String email) throws Exception {
-		if (!allowNewInstance)
-			throw new Exception("No se puede crear la instancia, usa getInstance");
-		else {
-			this.name = name;
-			this.email = email;
-			instance = new User(name, email);
-			allowNewInstance = false;
-		}
-	}
-
- */
 
 	public String getName() {
 		return name;

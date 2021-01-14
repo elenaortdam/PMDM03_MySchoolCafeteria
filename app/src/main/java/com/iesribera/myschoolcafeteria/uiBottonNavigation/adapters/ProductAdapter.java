@@ -1,4 +1,4 @@
-package com.iesribera.myschoolcafeteria.ui.adapters;
+package com.iesribera.myschoolcafeteria.uiBottonNavigation.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.iesribera.myschoolcafeteria.Product;
 import com.iesribera.myschoolcafeteria.R;
+import com.iesribera.myschoolcafeteria.models.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	private final LayoutInflater inflater;
 	private List<Product> mProductList = new ArrayList<>();
 	private OnItemClickListener mListener;
+	Context context;
 
 	public interface OnItemClickListener {
 		void onItemClick(int position);
@@ -81,13 +83,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		holder.removeButton.setOnClickListener(v -> editQuantity(holder, position, false));
 	}
 
-	//TODO: elena controlar que no se puedan poner cantidades negativas
 	private void editQuantity(@NonNull ViewHolder holder, int position, boolean increaseQuantity) {
 		int quantityUpdated = mProductList.get(position).getQuantity();
 		if (increaseQuantity) {
 			quantityUpdated += 1;
 		} else {
 			quantityUpdated -= 1;
+		}
+		if (quantityUpdated < 0) {
+			quantityUpdated = 0;
+			if (context != null) {
+				Toast.makeText(context, "La cantidad no puede ser inferior a 0",
+							   Toast.LENGTH_LONG).show();
+			}
 		}
 		mProductList.get(position).setQuantity(quantityUpdated);
 		holder.quantity.setText(String.valueOf(quantityUpdated));
